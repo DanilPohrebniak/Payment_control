@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
@@ -29,6 +31,20 @@ def next_month(d):
     month = "month=" + str(next_month.year) + "-" + str(next_month.month)
     return month
 
+def delete_event(request, event_id):
+    if request.method == 'POST':
+        print('method is POST')
+        try:
+            print('we try to delete event')
+            event = Event.objects.get(pk=event_id)
+            event.delete()
+            return JsonResponse({'success': True})
+        except Event.DoesNotExist:
+            print('can`t delete')
+            return JsonResponse({'success': False, 'error': 'Event does not exist'}, status=404)
+    else:
+        print('method is GET')
+        return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
 class CalendarViewNew(generic.ListView):
     template_name = "calendarapp/calendar.html"
@@ -47,7 +63,8 @@ class CalendarViewNew(generic.ListView):
                     "title": event.title,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
-
+                    "description": event.description,
+                    "id": event.id,
                 }
             )
         context = {"form": forms, "events": event_list,
@@ -58,8 +75,9 @@ class CalendarViewNew(generic.ListView):
         forms = self.form_class(request.POST)
         if forms.is_valid():
             form = forms.save(commit=False)
-            form.user = request.user
+            # Need to change it for actual user
+            form.user = User.objects.get(pk=1)
             form.save()
-            return redirect("calendarapp:calendar")
+            return redirect("calendars")
         context = {"form": forms}
         return render(request, self.template_name, context)
