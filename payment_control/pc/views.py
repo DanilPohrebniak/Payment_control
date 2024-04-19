@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.views import generic
@@ -46,6 +46,18 @@ def delete_event(request, event_id):
         print('method is GET')
         return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
+def update_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
 class CalendarViewNew(generic.ListView):
     template_name = "calendarapp/calendar.html"
     form_class = EventForm
@@ -56,13 +68,13 @@ class CalendarViewNew(generic.ListView):
         events = Event.objects.get_all_events(user=1)
         events_month = Event.objects.get_running_events(user=1)
         event_list = []
-        # start: '2020-09-16T16:00:00'
         for event in events:
+            print(event.end_time.strftime("%Y-%m-%dT%H:%M:%S"))
             event_list.append(
                 {
                     "title": event.title,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "end111": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,
                     "id": event.id,
                 }
