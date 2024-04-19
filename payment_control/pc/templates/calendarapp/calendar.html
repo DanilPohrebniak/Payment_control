@@ -1,20 +1,20 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block title %}Event Calendar{% endblock title %}
-
 {% block extracss %}
   <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
 {% endblock extracss %}
 
 {% block breadcrumb %}
-  <div>
-      <h1><i class="fa fa-calendar"></i> Calendar</h1>
-      <p>Event Calendar</p>
-  </div>
-  <ul class="app-breadcrumb breadcrumb">
-      <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-      <li class="breadcrumb-item"><a href="#">Calendar</a></li>
-  </ul>
+
+<div>
+    <h1><i class="fa fa-calendar"></i> Calendar</h1>
+    <p>Event Calendar</p>
+</div>
+<ul class="app-breadcrumb breadcrumb">
+    <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+    <li class="breadcrumb-item"><a href="#">Calendar</a></li>
+</ul>
 {% endblock breadcrumb %}
 
 {% block content %}
@@ -60,12 +60,19 @@
                                     {{ form.description }}
                                 </div>
                                 <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Upload Photo:</label>
+                                    <input type="file" name="image" accept="image/*">
+                                </div>
+                                <div class="form-group">
                                     <label for="message-text" class="col-form-label">Start Date:</label>
                                     {{ form.start_time }}
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">End Date:</label>
                                     {{ form.end_time }}
+                                </div>
+                                <div id="photoContainer">
+
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -86,7 +93,20 @@
 {% block extrascripts %}
   <script src="{% static 'calender/main.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
   <script>
+  $(document).ready(function() {
+        $('.description input[type="text"]').addClass('form-control').css('height', '10px');
+  });
+
+  $(document).ready(function() {
+        // Активация Fancybox для элементов с классом "fancybox"
+        $('[data-fancybox="gallery"]').fancybox({
+            // Опции Fancybox здесь
+        });
+  });
   document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var today = new Date();
@@ -111,6 +131,9 @@
                 form.description.value = '';
                 form.start_time.value = '';
                 form.end_time.value = '';
+                form.end_time.value = '';
+                var photoContainer = document.getElementById('photoContainer');
+                photoContainer.innerHTML = ''; // Clear previous photos
 
                 var updateButton = document.getElementById('updateButton');
                 var deleteButton = document.getElementById('deleteButton');
@@ -124,7 +147,6 @@
 
             },
             eventClick: function(arg) {
-                console.log('Event data:', arg.event);
                 // Open the modal for creating a new event
                 var modal = document.getElementById('eventModal');
                 modal.style.display = 'block';
@@ -135,11 +157,28 @@
 
                 // Check if description is available, then populate the description field
                 if (arg.event.extendedProps.description) {
-                    form.description.value = arg.event.description;
+                    form.description.value = arg.event.extendedProps.description;
                 }
                 // Format start and end time fields
                 form.start_time.value = moment(arg.event.start).format('YYYY-MM-DDTHH:mm:ss');
-                form.end_time.value = moment(arg.event.extendedProps.end111).format('YYYY-MM-DDTHH:mm:ss');
+                form.end_time.value = moment(arg.event.extendedProps.end_t).format('YYYY-MM-DDTHH:mm:ss');
+
+                var photoContainer = document.getElementById('photoContainer');
+                photoContainer.innerHTML = '';
+
+                photoList = document.createElement('ul');
+                arg.event.extendedProps.photos.forEach(function(photo) {
+                    var photoItem = document.createElement('li');
+                    var link = document.createElement('a');
+                    link.href = '/' + photo;
+                    link.setAttribute('data-fancybox', 'gallery'); // Добавление атрибута для Fancybox
+                    var img = document.createElement('img');
+                    img.src = '/' + photo;
+                    link.appendChild(img);
+                    photoItem.appendChild(link);
+                    photoList.appendChild(photoItem);
+                });
+                photoContainer.appendChild(photoList);
 
                 var updateButton = document.getElementById('updateButton');
                 var deleteButton = document.getElementById('deleteButton');

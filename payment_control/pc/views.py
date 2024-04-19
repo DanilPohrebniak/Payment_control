@@ -6,8 +6,8 @@ from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 import calendar
 from .utils import Calendar
-from .models import Event
-from .forms import EventForm
+from .models import Event, EventPhoto
+from .forms import EventForm, EventPhotoForm
 
 
 def get_date(req_day):
@@ -46,18 +46,6 @@ def delete_event(request, event_id):
         print('method is GET')
         return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
-def update_event(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    if request.method == 'POST':
-        form = EventForm(request.POST, instance=event)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
-    else:
-        return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
-
 class CalendarViewNew(generic.ListView):
     template_name = "calendarapp/calendar.html"
     form_class = EventForm
@@ -70,13 +58,15 @@ class CalendarViewNew(generic.ListView):
         event_list = []
         for event in events:
             print(event.end_time.strftime("%Y-%m-%dT%H:%M:%S"))
+            photos = list(event.photos.values_list('image', flat=True))
             event_list.append(
                 {
                     "title": event.title,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "end111": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "end_t": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,
                     "id": event.id,
+                    "photos": photos,
                 }
             )
         context = {"form": forms, "events": event_list,
@@ -93,3 +83,31 @@ class CalendarViewNew(generic.ListView):
             return redirect("calendars")
         context = {"form": forms}
         return render(request, self.template_name, context)
+
+
+def update_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    print("we're here")
+    if request.method == 'POST':
+        print("in post")
+        form = EventForm(request.POST, instance=event)
+        photo_form = EventPhotoForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            print("form is good")
+
+        if photo_form.is_valid() or not request.FILES:  # Проверяем, есть ли файлы
+            print("all is good")
+            form.save()
+
+            if photo_form.is_valid():
+                photo = photo_form.save(commit=False)
+                photo.event = event
+                photo.save()
+
+            return JsonResponse({'success': True})
+        else:
+            print("photo is not good")
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)

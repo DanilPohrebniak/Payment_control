@@ -1,5 +1,37 @@
 
 /* classes attached to <body> */
+/* Стили для элементов галереи */
+#photoContainer {
+   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+#photoContainer img {
+  max-width: 300px !important; /* Максимальная ширина изображения */
+  max-height: 300px !important; /* Максимальная высота изображения */
+  border-radius: 5px; /* Закругленные углы */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Тень */
+  transition: transform 0.3s ease; /* Плавное изменение размера */
+}
+
+#photoContainer img:hover {
+  transform: scale(1.1); /* Небольшое увеличение при наведении */
+} /* Стили для элементов галереи */
+
+#photoContainer li {
+    list-style-type: none;
+}
+
+#photoContainer li::marker {
+  display: none;
+}
+
+textarea.form-control {
+    height: 50px; /* Установите желаемую высоту */
+}
 
 .fc-not-allowed,
 .fc-not-allowed .fc-event { /* override events' custom cursors */

@@ -1,5 +1,5 @@
 from django.forms import ModelForm, DateInput
-from .models import Event, EventMember
+from .models import Event, EventMember, EventPhoto
 from django import forms
 
 
@@ -40,3 +40,9 @@ class AddMemberForm(forms.ModelForm):
     class Meta:
         model = EventMember
         fields = ["user"]
+
+
+class EventPhotoForm(forms.ModelForm):
+    class Meta:
+        model = EventPhoto
+        fields = ['image']

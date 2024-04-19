@@ -28,7 +28,7 @@
     <body class="app sidebar-mini">
         <!-- Navbar-->
         <header class="app-header">
-            <a class="app-header__logo" href="#">Payment control</a>
+            <a class="app-header__logo" href="{% url 'calendars' %}">Payment control</a>
             <!-- Sidebar toggle button-->
             <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
             <!-- Navbar Right Menu-->
@@ -49,7 +49,7 @@
         <aside class="app-sidebar">
             <ul class="app-menu">
                 <li>
-                    <a class="app-menu__item active" href="{% url 'calendars' %}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
+                    <a class="app-menu__item active" href="{% url 'calendars' %}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Calendar</span></a>
                 </li>
                 <li>
                     <a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Notes</span></a>

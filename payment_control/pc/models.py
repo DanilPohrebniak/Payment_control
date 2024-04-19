@@ -68,3 +68,11 @@ class EventMember(EventAbstract):
 
     def __str__(self):
         return str(self.user)
+
+
+class EventPhoto(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='event_photos')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
