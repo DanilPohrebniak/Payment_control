@@ -1,5 +1,6 @@
 from django.forms import ModelForm, DateInput
-from .models import Event, EventMember, EventPhoto
+from django.contrib.auth.forms import UserCreationForm
+from .models import Event, EventMember, EventPhoto, Notes
 from django import forms
 
 
@@ -46,3 +47,16 @@ class EventPhotoForm(forms.ModelForm):
     class Meta:
         model = EventPhoto
         fields = ['image']
+
+
+class NotesEntryForm(forms.ModelForm):
+    class Meta:
+        model = Notes
+        fields = ['username', 'password', 'description']
+
+
+class CustomUserCreationForm(UserCreationForm):
+    password = forms.CharField(label="Password", strip=False, widget=forms.PasswordInput)
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['username', 'email', 'password']

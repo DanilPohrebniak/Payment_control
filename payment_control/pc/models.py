@@ -76,3 +76,16 @@ class EventPhoto(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 
+class Notes(models.Model):
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    description = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        verbose_name = 'Note'
+        verbose_name_plural = 'Notes'
+

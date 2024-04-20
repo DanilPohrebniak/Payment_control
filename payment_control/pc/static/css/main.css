@@ -11,6 +11,35 @@
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+.custom-btn-notes {
+  background-color: #009688 !important;
+  border-color: #009688 !important;
+  color: #ffffff !important;
+}
+h1{
+  text-align: center;
+}
+
+.custom-table {
+  border-radius: 10px; /* Радиус закругления углов */
+  overflow: hidden; /* Обрезаем контент за пределами таблицы */
+}
+
+.custom-table thead {
+  background-color: #009688; /* Цвет фона заголовков */
+  color: #fff; /* Цвет текста заголовков */
+}
+
+.custom-table th, .custom-table td {
+  border: 1px solid #dee2e6; /* Цвет границы ячеек */
+}
+
+.custom-btn-notes,
+.custom-btn,
+.btn-dark {
+  margin-bottom: 10px; /* Отступ между кнопками */
+}
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -15163,9 +15192,12 @@ be a descendant of the grid when it is being dragged.
   background-color: #222d32;
   -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
-  -webkit-transition: left 0.3s ease, width 0.3s ease;
-  -o-transition: left 0.3s ease, width 0.3s ease;
-  transition: left 0.3s ease, width 0.3s ease;
+  -webkit-transition: left 0.3s ease,
+ width 0.3s ease;
+  -o-transition: left 0.3s ease,
+ width 0.3s ease;
+  transition: left 0.3s ease,
+ width 0.3s ease;
 }
 
 .app-sidebar::-webkit-scrollbar {
@@ -15242,9 +15274,12 @@ be a descendant of the grid when it is being dragged.
   padding: 12px 15px;
   font-size: 1.08em;
   border-left: 3px solid transparent;
-  -webkit-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  -o-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  transition: border-left-color 0.3s ease, background-color 0.3s ease;
+  -webkit-transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
+  -o-transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
+  transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
   color: #fff;
 }
 
